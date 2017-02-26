@@ -9,8 +9,9 @@ const {Point} = paper;
 paper.setup(document.getElementById("tile-canvas"));
 
 const params = {
-    tileSize: 100,
-    hankinAngle: 30
+    tileSize: 200,
+    hankinAngle: 30,
+    hankinDistance: 0.1
 };
 
 const self = {
@@ -18,10 +19,12 @@ const self = {
 };
 
 const gui = new dat.GUI();
-const sizeController = gui.add(params, "tileSize", 1, 200);
+const sizeController = gui.add(params, "tileSize", 1, 400);
 const hankinAngleController = gui.add(params, "hankinAngle", 0, 360);
+const hankinDistanceController = gui.add(params, "hankinDistance", 0, 1);
 sizeController.onChange(render);
 hankinAngleController.onChange(render);
+hankinDistanceController.onChange(render);
 gui.add(self, "render");
 
 function render () {
@@ -52,21 +55,24 @@ render();
  * @param theta - Angle (degrees) of rays.
  */
 function drawHankin (p1, p2, theta) {
-    const dist = p2.subtract(p1);
-    const root = p1.add(dist.divide(2));
-    const norm = dist.normalize().multiply(100);
+    const dir = p2.subtract(p1).divide(2);
+    const root = p1.add(dir);
+    const norm = dir.normalize();
     const l1 = paper.Path.Line({
         from: root,
-        to: root.subtract(perpendicular(norm)),
+        to: root.subtract(perpendicular(norm.multiply(100))),
         strokeColor: "#000"
     });
     const l2 = paper.Path.Line({
         from: root,
-        to: root.subtract(perpendicular(norm)),
+        to: root.subtract(perpendicular(norm.multiply(100))),
         strokeColor: "#000"
     });
+    const dist = p2.getDistance(p1) / 2;
     l1.rotate(theta, root);
     l2.rotate(-theta, root);
+    l1.translate(norm.multiply(dist * params.hankinDistance));
+    l2.translate(norm.multiply(dist * -params.hankinDistance));
 }
 
 function drawCircle (center) {
