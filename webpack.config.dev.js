@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const DashboardPlugin = require("webpack-dashboard/plugin");
 
 module.exports = {
-    devtool: "cheap-source-map",
+    devtool: "eval-source-map",
     entry: [
         "./src/index"
     ],
@@ -13,7 +13,9 @@ module.exports = {
         filename: "bundle.js"
     },
     plugins:[
-        new DashboardPlugin(),
+        new DashboardPlugin({
+            port: 6002
+        }),
         new HtmlWebpackPlugin({
             template: "./src/index.html"
         })
@@ -23,6 +25,9 @@ module.exports = {
             test: /\.js$/,
             loaders: ["babel-loader"],
             include: path.join(__dirname, "src")
+        }, {
+            test: /\.html/,
+            loader: "raw-loader"
         }]
     },
     devServer: {
