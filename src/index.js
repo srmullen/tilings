@@ -9,7 +9,8 @@ const {Point} = paper;
 paper.setup(document.getElementById("tile-canvas"));
 
 const params = {
-    tileSize: 100
+    tileSize: 100,
+    hankinAngle: 30
 };
 
 const self = {
@@ -18,21 +19,23 @@ const self = {
 
 const gui = new dat.GUI();
 const sizeController = gui.add(params, "tileSize", 1, 200);
+const hankinAngleController = gui.add(params, "hankinAngle", 0, 360);
 sizeController.onChange(render);
+hankinAngleController.onChange(render);
 gui.add(self, "render");
 
 function render () {
     paper.project.clear();
     const tile1 = new Rectangle({
         strokeColor: "#000",
-        point: [50, 50],
+        center: paper.view.center,
         size: [params.tileSize, params.tileSize]
     });
 
-    drawHankin(tile1.bounds.topLeft, tile1.bounds.topRight, 30);
-    drawHankin(tile1.bounds.topRight, tile1.bounds.bottomRight, 30);
-    drawHankin(tile1.bounds.bottomRight, tile1.bounds.bottomLeft, 30);
-    drawHankin(tile1.bounds.bottomLeft, tile1.bounds.topLeft, 30);
+    drawHankin(tile1.bounds.topLeft, tile1.bounds.topRight, params.hankinAngle);
+    drawHankin(tile1.bounds.topRight, tile1.bounds.bottomRight, params.hankinAngle);
+    drawHankin(tile1.bounds.bottomRight, tile1.bounds.bottomLeft, params.hankinAngle);
+    drawHankin(tile1.bounds.bottomLeft, tile1.bounds.topLeft, params.hankinAngle);
 }
 
 render();
