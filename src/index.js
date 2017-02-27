@@ -12,6 +12,7 @@ window.paper = paper;
 const params = {
     tileSize: 100,
     hankinAngle: 30,
+    hankinLength: 100,
     hankinDistance: 0.1,
     polygonSides: 4
 };
@@ -28,16 +29,18 @@ const self = {
 const gui = new dat.GUI();
 const sizeController = gui.add(params, "tileSize", 1, 400);
 const hankinAngleController = gui.add(params, "hankinAngle", 0, 360);
+const hankinLengthController = gui.add(params, "hankinLength", 0, 500);
 const hankinDistanceController = gui.add(params, "hankinDistance", 0, 1);
 const polygonSidesController = gui.add(params, "polygonSides", 3, 30);
 sizeController.onChange(render);
 hankinAngleController.onChange(render);
+hankinLengthController.onChange(render);
 hankinDistanceController.onChange(render);
 polygonSidesController.onChange(render);
 
 const gridFolder = gui.addFolder("Grid");
-const gridXController = gridFolder.add(grid, "x", 1, 500);
-const gridYController = gridFolder.add(grid, "y", 1, 500);
+const gridXController = gridFolder.add(grid, "x", 5, 500);
+const gridYController = gridFolder.add(grid, "y", 5, 500);
 gridXController.onChange(render);
 gridYController.onChange(render);
 
@@ -80,12 +83,12 @@ function drawHankin (p1, p2, theta) {
     const norm = dir.normalize();
     const l1 = paper.Path.Line({
         from: root,
-        to: root.subtract(perpendicular(norm.multiply(100))),
+        to: root.subtract(perpendicular(norm.multiply(params.hankinLength))),
         strokeColor: "#000"
     });
     const l2 = paper.Path.Line({
         from: root,
-        to: root.subtract(perpendicular(norm.multiply(100))),
+        to: root.subtract(perpendicular(norm.multiply(params.hankinLength))),
         strokeColor: "#000"
     });
     const dist = p2.getDistance(p1) / 2;
