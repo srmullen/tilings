@@ -7,12 +7,19 @@ const {Rectangle, Circle, Line, RegularPolygon} = paper.Path;
 const {Point} = paper;
 
 paper.setup(document.getElementById("tile-canvas"));
+window.paper = paper;
 
 const params = {
-    tileSize: 200,
+    tileSize: 100,
     hankinAngle: 30,
-    hankinDistance: 0.1
+    hankinDistance: 0.1,
+    polygonSides: 4
 };
+
+const grid = {
+    x: 100,
+    y: 100
+}
 
 const self = {
     render
@@ -22,28 +29,42 @@ const gui = new dat.GUI();
 const sizeController = gui.add(params, "tileSize", 1, 400);
 const hankinAngleController = gui.add(params, "hankinAngle", 0, 360);
 const hankinDistanceController = gui.add(params, "hankinDistance", 0, 1);
+const polygonSidesController = gui.add(params, "polygonSides", 3, 30);
 sizeController.onChange(render);
 hankinAngleController.onChange(render);
 hankinDistanceController.onChange(render);
-gui.add(self, "render");
+polygonSidesController.onChange(render);
+
+const gridFolder = gui.addFolder("Grid");
+const gridXController = gridFolder.add(grid, "x", 1, 500);
+const gridYController = gridFolder.add(grid, "y", 1, 500);
+gridXController.onChange(render);
+gridYController.onChange(render);
+
 
 function render () {
     paper.project.clear();
 
-    const octagon = new RegularPolygon({
-        center: paper.view.center,
-        sides: 8,
-        radius: params.tileSize,
-        strokeColor: "#000"
-    });
+    const polygons = [];
+    let x = 0;
+    let y = 0;
+    for (let i = 0; x < paper.view.bounds.width; i++) {
+        polygons[i] = [];
+        x = i * grid.x;
+        for (let j = 0; y < paper.view.bounds.height; j++) {
+            y = j * grid.y;
+            polygons[i][j] = new RegularPolygon({
+                center: [x, y],
+                sides: Math.round(params.polygonSides),
+                radius: params.tileSize,
+                strokeColor: "#000"
+            });
+            drawHankins(polygons[i][j].segments);
+        }
+        y = 0;
+    }
 
-    // const tile1 = new Rectangle({
-    //     strokeColor: "#000",
-    //     center: paper.view.center,
-    //     size: [params.tileSize, params.tileSize]
-    // });
-
-    drawHankins(octagon.segments);
+    // drawHankins(octagon.segments);
 }
 
 render();
