@@ -19,7 +19,10 @@ const params = {
 
 const grid = {
     x: 100,
-    y: 100
+    y: 100,
+    show: false,
+    color: "#0f0",
+    opacity: 0.5
 }
 
 const self = {
@@ -41,8 +44,14 @@ polygonSidesController.onChange(render);
 const gridFolder = gui.addFolder("Grid");
 const gridXController = gridFolder.add(grid, "x", 5, 500);
 const gridYController = gridFolder.add(grid, "y", 5, 500);
+// const showGridController = gridFolder.add(grid, "show");
+const gridColorController = gridFolder.addColor(grid, "color");
+const gridOpacityController = gridFolder.add(grid, "opacity", 0, 1);
 gridXController.onChange(render);
 gridYController.onChange(render);
+// showGridController.onChange(render);
+gridColorController.onChange(render);
+gridOpacityController.onChange(render);
 
 
 function render () {
@@ -51,6 +60,7 @@ function render () {
     const polygons = [];
     let x = 0;
     let y = 0;
+    console.log(grid.color);
     for (let i = 0; x < paper.view.bounds.width; i++) {
         polygons[i] = [];
         x = i * grid.x;
@@ -60,14 +70,14 @@ function render () {
                 center: [x, y],
                 sides: Math.round(params.polygonSides),
                 radius: params.tileSize,
-                strokeColor: "#000"
+                fillColor: grid.color,
+                opacity: grid.opacity
+                // strokeColor: grid.show ? "#000" : null
             });
             drawHankins(polygons[i][j].segments);
         }
         y = 0;
     }
-
-    // drawHankins(octagon.segments);
 }
 
 render();
@@ -102,14 +112,6 @@ function drawHankins (segments) {
     for (let i = 0; i < segments.length; i++) {
         drawHankin(segments[i].point, segments[(i + 1) % segments.length].point, params.hankinAngle);
     }
-}
-
-function drawCircle (center) {
-    new Circle({
-        center,
-        radius: 4,
-        fillColor: "#f00"
-    });
 }
 
 function perpendicular (point) {
