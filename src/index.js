@@ -3,7 +3,7 @@ import paper from "paper";
 import dat from "./dat.gui.min.js";
 
 const PI = Math.PI;
-const {Rectangle, Circle, Line} = paper.Path;
+const {Rectangle, Circle, Line, RegularPolygon} = paper.Path;
 const {Point} = paper;
 
 paper.setup(document.getElementById("tile-canvas"));
@@ -29,25 +29,24 @@ gui.add(self, "render");
 
 function render () {
     paper.project.clear();
-    const tile1 = new Rectangle({
-        strokeColor: "#000",
+
+    const octagon = new RegularPolygon({
         center: paper.view.center,
-        size: [params.tileSize, params.tileSize]
+        sides: 8,
+        radius: params.tileSize,
+        strokeColor: "#000"
     });
 
-    drawHankin(tile1.bounds.topLeft, tile1.bounds.topRight, params.hankinAngle);
-    drawHankin(tile1.bounds.topRight, tile1.bounds.bottomRight, params.hankinAngle);
-    drawHankin(tile1.bounds.bottomRight, tile1.bounds.bottomLeft, params.hankinAngle);
-    drawHankin(tile1.bounds.bottomLeft, tile1.bounds.topLeft, params.hankinAngle);
+    // const tile1 = new Rectangle({
+    //     strokeColor: "#000",
+    //     center: paper.view.center,
+    //     size: [params.tileSize, params.tileSize]
+    // });
+
+    drawHankins(octagon.segments);
 }
 
 render();
-
-// const tile2 = Rectangle({
-//     strokeColor: "#000",
-//     point: [40, 40],
-//     size: [100, 100]
-// });
 
 /*
  * @param p1 {Point} - Surface point 1.
@@ -73,6 +72,12 @@ function drawHankin (p1, p2, theta) {
     l2.rotate(-theta, root);
     l1.translate(norm.multiply(dist * params.hankinDistance));
     l2.translate(norm.multiply(dist * -params.hankinDistance));
+}
+
+function drawHankins (segments) {
+    for (let i = 0; i < segments.length; i++) {
+        drawHankin(segments[i].point, segments[(i + 1) % segments.length].point, params.hankinAngle);
+    }
 }
 
 function drawCircle (center) {
