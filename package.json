@@ -11,7 +11,8 @@
   "author": "Sean Mullen",
   "license": "ISC",
   "dependencies": {
-    "paper": "^0.10.2"
+    "paper": "^0.10.2",
+    "tone": "^0.9.0"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
