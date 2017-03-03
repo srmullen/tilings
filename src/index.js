@@ -16,7 +16,7 @@ window.paper = paper;
 
 const params = {
     tileSize: 100,
-    hankinAngle: 30,
+    hankinAngle: 90,
     hankinLength: 100,
     hankinDistance: 0.1,
     polygonSides: 4
@@ -36,7 +36,7 @@ const self = {
 
 const gui = new dat.GUI();
 const sizeController = gui.add(params, "tileSize", 1, 400);
-const hankinAngleController = gui.add(params, "hankinAngle", 0, 180);
+const hankinAngleController = gui.add(params, "hankinAngle", 90, 270);
 const hankinLengthController = gui.add(params, "hankinLength", 0, 500);
 const hankinDistanceController = gui.add(params, "hankinDistance", 0, 1);
 const polygonSidesController = gui.add(params, "polygonSides", 3, 30);
@@ -57,29 +57,41 @@ gridColorController.onChange(render);
 gridOpacityController.onChange(render);
 
 
+// function render () {
+//     paper.project.clear();
+//
+//     const polygons = [];
+//     let x = 0;
+//     let y = 0;
+//     for (let i = 0; x < paper.view.bounds.width; i++) {
+//         polygons[i] = [];
+//         x = i * grid.x;
+//         for (let j = 0; y < paper.view.bounds.height; j++) {
+//             y = j * grid.y;
+//             const polygon = new Polygon({
+//                 center: [x, y],
+//                 sides: Math.round(params.polygonSides),
+//                 radius: params.tileSize,
+//                 fillColor: grid.color,
+//                 opacity: grid.opacity
+//             });
+//             polygon.draw(params.hankinAngle, params.hankinDistance, params.hankinLength);
+//             polygons[i][j] = polygon;
+//         }
+//         y = 0;
+//     }
+// }
+
 function render () {
     paper.project.clear();
-
-    const polygons = [];
-    let x = 0;
-    let y = 0;
-    for (let i = 0; x < paper.view.bounds.width; i++) {
-        polygons[i] = [];
-        x = i * grid.x;
-        for (let j = 0; y < paper.view.bounds.height; j++) {
-            y = j * grid.y;
-            const polygon = new Polygon({
-                center: [x, y],
-                sides: Math.round(params.polygonSides),
-                radius: params.tileSize,
-                fillColor: grid.color,
-                opacity: grid.opacity
-            });
-            polygon.draw(params.hankinAngle, params.hankinDistance, params.hankinLength);
-            polygons[i][j] = polygon;
-        }
-        y = 0;
-    }
+    const polygon = new Polygon({
+        center: [paper.view.bounds.width/2, paper.view.bounds.height/2],
+        sides: Math.round(params.polygonSides),
+        radius: params.tileSize,
+        fillColor: grid.color,
+        opacity: grid.opacity
+    });
+    polygon.draw(params.hankinAngle, params.hankinDistance, params.hankinLength);
 }
 
 render();
