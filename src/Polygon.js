@@ -4,15 +4,15 @@ import {flatten, minBy, sortBy} from "lodash";
 function Polygon (params) {
     this.params = params;
     // this.group = new paper.Group();
+    this.shape = new paper.Path.RegularPolygon(this.params);
 }
 
 Polygon.prototype.draw = function (theta, delta, length) {
-    this.drawShape();
     drawHankins(this.shape.segments, theta, length, delta);
 };
 
-Polygon.prototype.drawShape = function () {
-    this.shape = new paper.Path.RegularPolygon(this.params);
+Polygon.prototype.attach = function (polygon) {
+
 };
 
 function calculateHankins (p1, p2, theta, delta) {
@@ -59,8 +59,10 @@ function calculateLengths (hankins) {
         const [p1, p2] = paths[i];
         const others = flatten([...paths.slice(0, i), ...paths.slice(i+1)]);
         const lengths = others.map(path => {
-            const i1 = p1.getIntersections(path)[0];
-            const i2 = p2.getIntersections(path)[0];
+            const intersections1 = p1.getIntersections(path);
+            const intersections2 = p2.getIntersections(path);
+            const i1 = intersections1.length === 1 ? intersections1[0] : null;
+            const i2 = intersections2.length === 1 ? intersections2[0] : null;
             if (i1) {
                 const pathCost = path.segments[0].point.getDistance(i1.point);
                 const cost = p1.segments[0].point.getDistance(i1.point) + pathCost;
