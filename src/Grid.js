@@ -6,28 +6,10 @@ function Grid () {
 }
 
 Grid.draw = function () {
-    // const square = new Polygon({
-    //     sides: 4,
-    //     center: [300, 200],
-    //     radius: 20
-    // });
-    // const pentagon = new Polygon({
-    //     sides: 5,
-    //     center: [200, 300],
-    //     radius: 20
-    // });
-
-    // drawPoints(square);
-    // drawPoints(pentagon);
-
     const square = createPolygon(4, new paper.Point(300, 200), new paper.Point(380, 150));
     square.map(drawPoint);
     const pentagon = attach(5, square, 3);
     pentagon.map(drawPoint);
-    // const septagon = createPolygon(7, new paper.Point(300, 200), new paper.Point(380, 150));
-    // septagon.map(drawPoint);
-
-    // square.attach(0, pentagon);
 }
 
 function drawPoint (point) {
