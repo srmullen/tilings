@@ -18,6 +18,9 @@ module.exports = {
             }
         }),
         new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('production')
+        }),
         new HtmlWebpackPlugin({
             template: "./src/index.html"
         })
@@ -28,8 +31,5 @@ module.exports = {
             loaders: ["babel-loader"],
             include: path.join(__dirname, "src")
         }]
-    },
-    devServer: {
-        contentBase: "./dist"
     }
 }

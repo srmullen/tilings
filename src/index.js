@@ -1,12 +1,15 @@
-import "./index.html";
 import paper from "paper";
 import dat from "./dat.gui.min.js";
-import Tone from "tone";
+// import Tone from "tone";
 
 import Polygon from "./Polygon";
 import Grid from "./Grid";
 
-window.Tone = Tone;
+if (process.env.NODE_ENV !== 'production') {
+    require("./index.html");
+}
+
+// window.Tone = Tone;
 
 const PI = Math.PI;
 const {Rectangle, Circle, Line} = paper.Path;
