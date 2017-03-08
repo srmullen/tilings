@@ -1,4 +1,5 @@
 import paper from "paper";
+import queryString from "query-string";
 import dat from "./dat.gui.min.js";
 import Tone from "tone";
 
@@ -74,23 +75,28 @@ function createGUIControls () {
     const hankinLengthController = gui.add(params, "length", 0, 500);
     const inferLengthController = gui.add(params, INFER_LENGTH);
     const polygonSidesController = gui.add(params, "polygonSides", 3, 30);
-    sizeController.onChange(render);
-    hankinAngleController.onChange(render);
-    hankinDistanceController.onChange(render);
-    hankinLengthController.onChange(render);
-    inferLengthController.onChange(render);
-    polygonSidesController.onChange(render);
+    sizeController.onChange(paramChange);
+    hankinAngleController.onChange(paramChange);
+    hankinDistanceController.onChange(paramChange);
+    hankinLengthController.onChange(paramChange);
+    inferLengthController.onChange(paramChange);
+    polygonSidesController.onChange(paramChange);
 
     const gridFolder = gui.addFolder("Grid");
     const gridXController = gridFolder.add(grid, "x", 5, 500);
     const gridYController = gridFolder.add(grid, "y", 5, 500);
     const gridColorController = gridFolder.addColor(grid, "color");
     const gridOpacityController = gridFolder.add(grid, "opacity", 0, 1);
-    gridXController.onChange(render);
-    gridYController.onChange(render);
-    gridColorController.onChange(render);
-    gridOpacityController.onChange(render);
+    gridXController.onChange(paramChange);
+    gridYController.onChange(paramChange);
+    gridColorController.onChange(paramChange);
+    gridOpacityController.onChange(paramChange);
 }
+
+function paramChange () {
+    history.replaceState(null, null, "?" + queryString.stringify(params));
+    render();
+};
 
 function render () {
     paper.project.clear();
