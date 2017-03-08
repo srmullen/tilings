@@ -8,11 +8,7 @@ function Polygon (params) {
 }
 
 Polygon.prototype.draw = function (theta, delta, length) {
-    drawHankins(this.shape.segments, theta, length, delta);
-};
-
-Polygon.prototype.attach = function (polygon) {
-
+    drawHankins(this.shape.segments, theta, delta, length);
 };
 
 function calculateHankins (p1, p2, theta, delta) {
@@ -29,13 +25,18 @@ function calculateHankins (p1, p2, theta, delta) {
     return [{root: h1root, vec: h1vec}, {root: h2root, vec: h2vec}];
 };
 
-function drawHankins (segments, hankinAngle, hankinLength, hankinDistance) {
-    const hankins = [];
-    for (let i = 0; i < segments.length; i++) {
-        // drawHankin(segments[i].point, segments[(i + 1) % segments.length].point, hankinAngle, hankinLength, hankinDistance);
-        hankins[i] = calculateHankins(segments[i].point, segments[(i + 1) % segments.length].point, hankinAngle, hankinDistance);
+function drawHankins (segments, hankinAngle, hankinDistance, hankinLength) {
+    if (isFinite(hankinLength)) {
+        for (let i = 0; i < segments.length; i++) {
+            drawHankin(segments[i].point, segments[(i + 1) % segments.length].point, hankinAngle, hankinLength, hankinDistance);
+        }
+    } else {
+        const hankins = [];
+        for (let i = 0; i < segments.length; i++) {
+            hankins[i] = calculateHankins(segments[i].point, segments[(i + 1) % segments.length].point, hankinAngle, hankinDistance);
+        }
+        calculateLengths(hankins);
     }
-    calculateLengths(hankins);
 }
 
 function calculateLengths (hankins) {
@@ -99,7 +100,6 @@ function calculateLengths (hankins) {
         }
     }
     return hankinPaths;
-    console.log(flatten(paths).map(p => p.used));
 }
 
 /*
